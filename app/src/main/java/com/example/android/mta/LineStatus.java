@@ -1,37 +1,57 @@
 package com.example.android.mta;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class LineStatus {
 
-    private String lineStatus;
-    private String[] lineTimes = new String[8];
-    private boolean lineOnTime;
+    private static final String GOOD_SERVICE = "GOOD SERVICE";
+    private static final String TIME_NOT_AVAILABLE_MSG = "Time not available";
 
-    public LineStatus(String lineStatus, String[] lineTimes) {
-        this.lineStatus = lineStatus;
-        this.lineTimes = lineTimes;
+    private final String name, status, textHtml;
+    private final long dateTimeInMillis;
+
+    public LineStatus(String name, String status, String textHtml, long dateTimeInMillis) {
+        this.name = name.trim();
+        this.status = status.trim();
+        this.textHtml = textHtml;
+        this.dateTimeInMillis = dateTimeInMillis;
     }
 
-    public String getLineStatus() {
-        return lineStatus;
+    public String getName() {
+        return name;
     }
 
-    public void setLineStatus(String lineStatus) {
-        this.lineStatus = lineStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public String[] getLineTimes() {
-        return lineTimes;
+    public String getTextHtml() {
+        return textHtml;
     }
 
-    public void setLineTimes(String[] lineTimes) {
-        this.lineTimes = lineTimes;
+    public long getDateTimeInMillis() {
+        return dateTimeInMillis;
     }
 
-    public boolean isLineOnTime() {
-        return lineOnTime;
+    public boolean hasGoodService() {
+        return status.toUpperCase().equals(GOOD_SERVICE);
     }
 
-    public void setLineOnTime(boolean lineOnTime) {
-        this.lineOnTime = lineOnTime;
+    /**
+     * Retrieves the date/time value formatted in a specified pattern as a String
+     *
+     * @param pattern e.g. "dd/MM/yy hh:mm a" as laid out in {@link SimpleDateFormat}
+     * @return a String formatted according to the given pattern which represents the date/time
+     * value for this instance
+     * @see "https://developer.android.com/reference/java/text/SimpleDateFormat.html"
+     */
+    public String getFormattedDateTime(final String pattern) {
+        if (dateTimeInMillis == -1L) {
+            return TIME_NOT_AVAILABLE_MSG;
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.getDefault());
+        return simpleDateFormat.format(new Date(dateTimeInMillis));
     }
 }
