@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">mta</string>
+    <string name="ready_to_code">Ready to Code!</string>
 </resources>

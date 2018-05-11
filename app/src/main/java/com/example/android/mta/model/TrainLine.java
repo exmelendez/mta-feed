@@ -1,10 +1,10 @@
-package com.example.android.mta;
+package com.example.android.mta.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class LineStatus {
+public class TrainLine {
 
     private static final String GOOD_SERVICE = "GOOD SERVICE";
     private static final String TIME_NOT_AVAILABLE_MSG = "Time not available";
@@ -12,7 +12,7 @@ public class LineStatus {
     private final String name, status, textHtml;
     private final long dateTimeInMillis;
 
-    public LineStatus(String name, String status, String textHtml, long dateTimeInMillis) {
+    public TrainLine(String name, String status, String textHtml, long dateTimeInMillis) {
         this.name = name.trim();
         this.status = status.trim();
         this.textHtml = textHtml;
@@ -37,6 +37,16 @@ public class LineStatus {
 
     public boolean hasGoodService() {
         return status.toUpperCase().equals(GOOD_SERVICE);
+    }
+
+    @Override
+    public String toString() {
+        return "TrainLine{" +
+                "name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", textHtml='" + textHtml + '\'' +
+                ", dateTimeInMillis=" + dateTimeInMillis +
+                '}';
     }
 
     /**
