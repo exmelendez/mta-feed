@@ -7,39 +7,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.mta.model.TrainLine;
-
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class AdapterTwo extends RecyclerView.Adapter<AdapterTwo.ViewHolder> {
 
-    private List<TrainLine> mTrains;
+    private List<LineStatus> mLineStatus;
     private Context mContext;
 
-    Adapter(Context context, List<TrainLine> items) {
+    AdapterTwo(Context context, List<LineStatus> items) {
         this.mContext = context;
-        this.mTrains = items;
+        this.mLineStatus = items;
     }
 
     @Override
-    public Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterTwo.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View itemView = inflater.inflate(R.layout.list_line_status, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
-        TrainLine item = mTrains.get(position);
+    public void onBindViewHolder(AdapterTwo.ViewHolder holder, int position) {
+        LineStatus item = mLineStatus.get(position);
 
-            holder.lineName.setText(item.getName());
+            holder.lineName.setText(item.getLine());
             holder.lineStatus.setText(item.getStatus());
-            holder.lineDate.setText(item.getFormattedDateTime("dd/MM/yy hh:mm a"));
+            holder.lineDate.setText(item.getDate());
     }
 
     @Override
     public int getItemCount() {
-        return mTrains.size();
+        return mLineStatus.size();
     }
 
 

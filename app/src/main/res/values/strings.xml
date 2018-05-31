@@ -2,4 +2,5 @@
     <string name="app_name">mta</string>
     <string name="ready_to_code">Ready to Code!</string>
     <string name="github_username">Github Username</string>
+    <string name="employees">Employees:</string>
 </resources>
