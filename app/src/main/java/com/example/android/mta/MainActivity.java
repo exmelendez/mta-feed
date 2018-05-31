@@ -2,34 +2,79 @@ package com.example.android.mta;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.example.android.mta.data.DataProvider;
-import com.example.android.mta.model.TrainLine;
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.io.IOException;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
-    List<TrainLine> trainLineList = DataProvider.trainLineList;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Collections.sort(trainLineList, new Comparator<TrainLine>() {
+        List<LineStatus> lineStatuses;
+
+        try {
+            RecyclerView recyclerView = findViewById(R.id.rvItems);
+
+            XMLPullParserHandler parser = new XMLPullParserHandler();
+            lineStatuses = parser.parse(getAssets().open("train_service.xml"));
+
+            AdapterTwo adapter = new AdapterTwo(this, lineStatuses);
+
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        getLineStatus();
+
+    }
+
+    private void getLineStatus() {
+
+        System.out.println("Welcome to Retrofit - XML Converter");
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://localhost:3000")
+                .addConverterFactory(TikXmlConverterFactory.create())
+                .build();
+
+        MtaStatusService mtaService = retrofit.create(MtaStatusService.class);
+
+        Call<LineStatus> call = mtaService.getMtaStatus();
+
+        call.enqueue(new Callback<LineStatus>() {
             @Override
-            public int compare(TrainLine o1, TrainLine o2) {
-                return o1.getName().compareTo(o2.getName());
+            public void onResponse(Call<LineStatus> call, Response<LineStatus> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<LineStatus> call, Throwable t) {
+                t.printStackTrace();
             }
         });
 
-        Adapter adapter = new Adapter(this, trainLineList);
+        try {
+            Response<LineStatus> response = mtaService.getMtaStatus().execute();
+            LineStatus lineStatus = response.body();
+            System.out.println("Request done");
 
-        RecyclerView recyclerView = findViewById(R.id.rvItems);
-        recyclerView.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
